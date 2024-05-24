@@ -10,7 +10,7 @@ app.use('/user-api',userApp);
 app.use('/admin-api',adminApp);
 
 const corsOptions = {
-    origin: 'https://blog-app-using-react-4.onrender.com',
+    origin: 'https://ecommerce1-bgef.onrender.com/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200
