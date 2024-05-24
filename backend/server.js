@@ -3,11 +3,21 @@ const app=exp();
 const userApp = require('./APIs/userapi')
 const adminApp = require('./APIs/adminapi')
 const path=require('path')
+const cors =require('cors')
 require('dotenv').config()
 //Assign HTTP req to specifc route
 app.use('/user-api',userApp);
 app.use('/admin-api',adminApp);
 
+const corsOptions = {
+    origin: 'https://blog-app-using-react-4.onrender.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200
+  };
+  
+  // Use the CORS middleware with the options defined
+  app.use(cors(corsOptions));
 //bpdy parser
 app.use(exp.json());
 
