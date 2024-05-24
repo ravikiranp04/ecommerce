@@ -25,7 +25,7 @@ export default function Navigation() {
             height="50"
             className="d-inline-block align-top"
           />
-          <span className="text-info fs-4 ms-2"><em>Foodie</em></span>
+          <span className="text-info fs-4 ms-2"><em>E-commerce</em></span>
         </Link>
         <button
           className="navbar-toggler"
