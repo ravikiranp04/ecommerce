@@ -10,7 +10,7 @@ import Cart from './components/cart.js';
 import OfflineCart from './components/OfflineCart.js';
 import AdminProfile from './adminComponents/AdminProfile.js';
 import UserProfile from './components/UserProfile.js';
-import AddProduct from './adminComponents/AddProduct.js'
+import AddProduct from './adminComponents/AddProduct.js';
 import AdminCardDetail from './adminComponents/AdminCardDetail.js';
 import ModifyProduct from './adminComponents/ModifyProduct.js';
 import WishList from './components/WishList.js';
