@@ -15,24 +15,25 @@ function WishList() {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  const displayCards = async () => {
-    try {
-      const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-wishlist/${currentuser.username}`);
-      if (res.data.message === 'WishList Items are') {
-        setProducts(res.data.payload);
-      } else {
-        setErr(res.data.message);
-        console.log(res.data.message);
-      }
-    } catch (error) {
-      setErr('An error occurred while fetching the wishlist');
-      console.error(error);
-    }
-  };
+  
 
   useEffect(() => {
+    const displayCards = async () => {
+      try {
+        const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-wishlist/${currentuser.username}`);
+        if (res.data.message === 'WishList Items are') {
+          setProducts(res.data.payload);
+        } else {
+          setErr(res.data.message);
+          console.log(res.data.message);
+        }
+      } catch (error) {
+        setErr('An error occurred while fetching the wishlist');
+        console.error(error);
+      }
+    };
     displayCards();
-  }, [updateCounter,displayCards]);
+  }, [updateCounter]);
 
   const handleItemRemoval = () => {
     setUpdateCounter(prev => prev + 1);

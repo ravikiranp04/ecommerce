@@ -10,24 +10,25 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [err, setErr] = useState("");
 
-  const displayProducts = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/user-api/products`);
-      if (res.data.message === 'Products are') {
-        setProducts(res.data.payload);
-      } else {
-        setErr(res.data.message);
-        console.log(err);
-      }
-    } catch (error) {
-      setErr("Failed to fetch products");
-      console.error(error);
-    }
-  };
+  
 
   useEffect(() => {
+    const displayProducts = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/user-api/products`);
+        if (res.data.message === 'Products are') {
+          setProducts(res.data.payload);
+        } else {
+          setErr(res.data.message);
+          console.log(err);
+        }
+      } catch (error) {
+        setErr("Failed to fetch products");
+        console.error(error);
+      }
+    };
     displayProducts();
-  }, [location,displayProducts]);
+  }, [location]);
 
   return (
     <div>

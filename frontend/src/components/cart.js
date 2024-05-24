@@ -17,16 +17,7 @@ function Cart() {
   const navigate = useNavigate();
   //const location = useLocation();
 
-  const displayCartItems = async () => {
-    const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-cart/${currentuser.username}`);
-    if (res.data.message === 'Cart Items are') {
-      setProducts(res.data.payload);
-      navigate(`/user-profile/${currentuser.username}/cart`);
-    } else {
-      setErr(res.data.message);
-      console.log(err);
-    }
-  };
+  
 
   const calculateSubtotal = (quantities, products) => {
     let sub = 0;
@@ -55,8 +46,18 @@ function Cart() {
   };
 
   useEffect(() => {
+    const displayCartItems = async () => {
+      const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-cart/${currentuser.username}`);
+      if (res.data.message === 'Cart Items are') {
+        setProducts(res.data.payload);
+        navigate(`/user-profile/${currentuser.username}/cart`);
+      } else {
+        setErr(res.data.message);
+        console.log(err);
+      }
+    };
     displayCartItems();
-  }, [displayCartItems]);
+  }, []);
 
   useEffect(() => {
     const initialQuantities = products.map((product) => product.quantity || 1);
