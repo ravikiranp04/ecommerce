@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import { CiShare1 } from "react-icons/ci";
-import { BsCart3 } from "react-icons/bs";
-import { BiBookmarkPlus } from "react-icons/bi";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../port";
-import AdminCardDetail from "./AdminCardDetail";
 
 function AdminProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const [checkedItems, setCheckedItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [err, setErr] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
   const [message, setMessage] = useState(location.state?.message || "");
-  const [hoveredCard, setHoveredCard] = useState(null);
+
   const handleCardpopup = (product) => {
-    navigate(`/admin-profile/${product.productid}`,{state:{product}})
+    navigate(`/admin-profile/${product.productid}`, { state: { product } });
   };
 
-  const handleClosePopup = () => {
-    setSelectedProduct(null);
+  const handleAddProduct = () => {
+    navigate("add-product");
   };
-
   const Category = [
     { id: 1, value: "footwear" },
     { id: 2, value: "fashion" },
@@ -33,17 +26,12 @@ function AdminProfile() {
     { id: 4, value: "food" },
   ];
 
-  const handleAddProduct = () => {
-    navigate("add-product");
-  };
-
   const handleChange = (value) => {
-    const isChecked = checkedItems.includes(value);
-    if (isChecked) {
-      setCheckedItems(checkedItems.filter((item) => item !== value));
-    } else {
-      setCheckedItems([...checkedItems, value]);
-    }
+    setCheckedItems((prevCheckedItems) =>
+      prevCheckedItems.includes(value)
+        ? prevCheckedItems.filter((item) => item !== value)
+        : [...prevCheckedItems, value]
+    );
   };
 
   const displayProducts = async () => {
@@ -120,9 +108,10 @@ function AdminProfile() {
           </form>
           <div className="row">
             {filteredProducts.map((product) => (
-              <div className="col-md-4 mb-4 p-2" key={product.productid}
-              onMouseEnter={() => setHoveredCard(product.productid)}
-              onMouseLeave={() => setHoveredCard(null)}>
+              <div
+                className="col-md-4 mb-4 p-2"
+                key={product.productid}
+              >
                 <div className="card shadow-sm h-100">
                   <img
                     src={product.images[0]}
@@ -148,15 +137,16 @@ function AdminProfile() {
                       >
                         Edit
                       </button>
-                      {
-                        product.display_status==false?<button className="btn btn-danger me-2" disabled>Disabled</button>:
-                        <button className="btn btn-success me-2" disabled>Enabled</button>
-                      
-                      }
-                      
+                      {product.display_status === false ? (
+                        <button className="btn btn-danger me-2" disabled>
+                          Disabled
+                        </button>
+                      ) : (
+                        <button className="btn btn-success me-2" disabled>
+                          Enabled
+                        </button>
+                      )}
                     </div>
-                    
-                  
                   </div>
                 </div>
               </div>
@@ -164,10 +154,8 @@ function AdminProfile() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
 
 export default AdminProfile;
-

@@ -32,7 +32,7 @@ function WishList() {
 
   useEffect(() => {
     displayCards();
-  }, [updateCounter]);
+  }, [updateCounter,displayCards]);
 
   const handleItemRemoval = () => {
     setUpdateCounter(prev => prev + 1);

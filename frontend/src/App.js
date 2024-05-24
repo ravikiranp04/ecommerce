@@ -1,6 +1,6 @@
 import './App.css';
 
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import About from './screens/about.js';
 import Home from './screens/home.js';
 import Register from './screens/Register.js';

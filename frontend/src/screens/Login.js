@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { userLoginThunk } from '../Redux/slices/userLoginSLice';
 import { admin_uname } from '../port';
 import { NavLink } from 'react-router-dom';
+
 function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const state = useSelector(state => state.login);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Added reset to clear form after submission
   const dispatch = useDispatch();
   const { currentuser, errorMessage, loginStatus } = useSelector(state => state.userLogin);
   const navigate = useNavigate();
@@ -24,8 +24,9 @@ function Login() {
       } else {
         navigate(`/user-profile/${currentuser.username}`);
       }
+      reset(); // Reset form after successful login
     }
-  }, [loginStatus, currentuser.username, navigate]);
+  }, [loginStatus, currentuser.username, navigate, reset]);
 
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
@@ -43,7 +44,7 @@ function Login() {
                   placeholder="Enter username"
                   {...register("username", { required: true })}
                 />
-                {errors.username && <span className="text-danger">Username is required</span>}
+                {errors.username && errors.username.type === "required" && <span className="text-danger">Username is required</span>}
               </div>
               <div className="form-group mb-3">
                 <label htmlFor="password">Password</label>
@@ -54,7 +55,7 @@ function Login() {
                   placeholder="Enter password"
                   {...register("password", { required: true })}
                 />
-                {errors.password && <span className="text-danger">Password is required</span>}
+                {errors.password && errors.password.type === "required" && <span className="text-danger">Password is required</span>}
               </div>
               {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
               <button type="submit" className="btn btn-success w-100">Login</button>

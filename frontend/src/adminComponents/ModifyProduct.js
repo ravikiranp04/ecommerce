@@ -50,6 +50,7 @@ function ModifyProduct() {
     }
     else{
         setErr(res.data.message);
+        console.log(err)
     }
   };
 

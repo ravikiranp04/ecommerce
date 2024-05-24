@@ -43,7 +43,7 @@ export default function UserProfile() {
   const displayProducts=async()=>{
     const res = await axios.get(`${BASE_URL}/user-api/products`)
     console.log(res)
-    if(res.data.message=='Products are'){
+    if(res.data.message==='Products are'){
       setProducts(res.data.payload);
     }
     else{
