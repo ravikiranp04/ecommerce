@@ -9,7 +9,7 @@ function AdminProfile() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState([]);
-  const [err, setErr] = useState("");
+  //const [err, setErr] = useState("");
   const [message, setMessage] = useState(location.state?.message || "");
 
   const handleCardpopup = (product) => {
@@ -19,6 +19,7 @@ function AdminProfile() {
   const handleAddProduct = () => {
     navigate("add-product");
   };
+
   const Category = [
     { id: 1, value: "footwear" },
     { id: 2, value: "fashion" },
@@ -40,19 +41,21 @@ function AdminProfile() {
       if (res.data.message === "Products are") {
         setProducts(res.data.payload);
       } else {
-        setErr(res.data.message);
+        console.log(res.data.message); // Uncomment if needed
       }
     } catch (error) {
-      setErr("Failed to fetch products");
+       console.log("Failed to fetch products");  
     }
   };
 
   useEffect(() => {
     displayProducts();
+    
     if (message) {
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     }
-  }, [location]);
+    
+  }, [location,message]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearchQuery = product.title

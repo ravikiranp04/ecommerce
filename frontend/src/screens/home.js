@@ -27,7 +27,7 @@ export default function Home() {
 
   useEffect(() => {
     displayProducts();
-  }, [location]);
+  }, [location,displayProducts]);
 
   return (
     <div>

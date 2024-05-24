@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdDeleteForever } from 'react-icons/md';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { BASE_URL } from '../port';
@@ -15,7 +15,7 @@ function Cart() {
     headers: { Authorization: `Bearer ${token}` },
   });
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
 
   const displayCartItems = async () => {
     const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-cart/${currentuser.username}`);
@@ -56,7 +56,7 @@ function Cart() {
 
   useEffect(() => {
     displayCartItems();
-  }, []);
+  }, [displayCartItems]);
 
   useEffect(() => {
     const initialQuantities = products.map((product) => product.quantity || 1);
@@ -110,7 +110,7 @@ function Cart() {
                   <td>${product.priceAfterDiscount}</td>
                   <td>
                     <div className="d-flex align-items-center">
-                      { quantities[index]==1?
+                      { quantities[index]===1?
                           <MdDeleteForever
                           className="text-danger"
                           style={{ cursor: 'pointer', fontSize: '24px' }}

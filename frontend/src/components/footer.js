@@ -6,58 +6,58 @@ function Footer() {
       <div className="container">
         <div className="row">
           <div className="col-lg-3">
-            <div className="">
+            <div>
               <h6 className="footer-heading text-uppercase text-white">
                 Information
               </h6>
               <ul className="list-unstyled footer-link mt-2">
                 <li>
-                  <a href="">Pages</a>
+                  <button onClick={() => window.location.href = "/pages"}>Pages</button>
                 </li>
                 <li>
-                  <a href="">Our Team</a>
+                  <button onClick={() => window.location.href = "/team"}>Our Team</button>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="col-lg-3">
-            <div className="">
+            <div>
               <h6 className="footer-heading text-uppercase text-white">
                 Resources
               </h6>
               <ul className="list-unstyled footer-link mt-2">
                 <li>
-                  <a href="">Wikipedia </a>
+                  <a href="https://www.wikipedia.org">Wikipedia</a>
                 </li>
                 <li>
-                  <a href="">Term &amp; Service</a>
+                  <button onClick={() => window.location.href = "/terms"}>Terms &amp; Service</button>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="col-lg-2">
-            <div className="">
+            <div>
               <h6 className="footer-heading text-uppercase text-white">Help</h6>
               <ul className="list-unstyled footer-link mt-2">
                 <li>
-                  <a href="">Terms of Services</a>
+                  <button onClick={() => window.location.href = "/terms-of-service"}>Terms of Services</button>
                 </li>
                 <li>
-                  <a href="">Privacy Policy</a>
+                  <button onClick={() => window.location.href = "/privacy-policy"}>Privacy Policy</button>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="col-lg-4">
-            <div className="">
+            <div>
               <h6 className="footer-heading text-uppercase text-white">
                 Contact Us
               </h6>
               <p className="contact-info mt-2">
-                Contact us if need help with anything
+                Contact us if you need help with anything
               </p>
               <p className="contact-info">+91 9999999999</p>
             </div>

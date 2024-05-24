@@ -54,7 +54,7 @@ export default function UserProfile() {
 
   useEffect(()=>{
     displayProducts();
-  },[location])
+  },[location,displayProducts])
 
   const handleChange = (value) => {
     // Check if the item is already checked

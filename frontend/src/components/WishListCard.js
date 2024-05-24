@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CiShare1 } from "react-icons/ci";
 import { MdDeleteForever } from 'react-icons/md';
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import CardDetail from "./cardDetail";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../port";
@@ -12,7 +12,7 @@ export default function WishListCard({ products, onItemRemove }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { currentuser } = useSelector(state => state.userLogin);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handleCardpopup = (product) => {
     setSelectedProduct(product);
