@@ -36,7 +36,7 @@ userApp.post('/register',async(req,res)=>{
     cartobj.cartItems=[];
     cartobj.wishList=[];
     cartobj.saveForLater=[];
-    console.log(cartobj)
+    //console.log(cartobj)
     await cartCollection.insertOne(cartobj);
 
     res.send({message:"User Registered"})

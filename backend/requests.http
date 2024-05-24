@@ -1,5 +1,5 @@
 ###Register User
-post http://localhost:5100/user-api/register
+post http://localhost:5300/user-api/register
 Content-Type: application/json
 
 {

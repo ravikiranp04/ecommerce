@@ -71,6 +71,18 @@ export default function Navigation() {
             ) : (
               currentuser.username === 'admin' ? (
                 <div className="d-flex align-items-center">
+                  <li className="nav-item">
+                    <Link className="nav-link text-info" to="" onClick={logout}>
+                      <span className="lead fs-3 text-warning m-2">
+                        {currentuser.username}
+                      </span>
+                      SignOut
+                    </Link>
+                  </li>
+                </div>
+                
+              ) : (
+                <div className="d-flex align-items-center">
                   <li className="nav-item me-3">
                     <button className="btn btn-success" onClick={() => { navigate(`/user-profile/${currentuser.username}/cart`) }}>
                       My Cart
@@ -81,17 +93,6 @@ export default function Navigation() {
                       My Wishlist
                     </button>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link text-info" to="" onClick={logout}>
-                      <span className="lead fs-3 text-warning m-2">
-                        {currentuser.username}
-                      </span>
-                      SignOut
-                    </Link>
-                  </li>
-                </div>
-              ) : (
-                <div className="d-flex align-items-center">
                   <li className="nav-item">
                     <Link className="nav-link text-info" to="" onClick={logout}>
                       <span className="lead fs-3 text-warning m-2">

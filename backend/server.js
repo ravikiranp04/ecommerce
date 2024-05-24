@@ -25,7 +25,7 @@ app.use('/user-api', userApp);
 app.use('/admin-api', adminApp);
 
 // Optionally serve React build files
-// app.use(exp.static(path.join(__dirname, '../frontend/build')));
+ app.use(exp.static(path.join(__dirname, '../frontend/build')));
 
 // Connecting to MongoDB server
 const mongoClient = require('mongodb').MongoClient;
@@ -51,7 +51,7 @@ app.use((err, req, res, next) => {
   res.send({ status: "Error", message: err.message });
 });
 
-const port = process.env.PORT || 5100;
+const port = process.env.PORT || 5300;
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
