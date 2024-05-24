@@ -27,7 +27,9 @@ adminApp.post('/add-product',async(req,res)=>{
 
 //Soft delete a product
 adminApp.put('/disable/:prdid',async(req,res)=>{
-    const prodid= req.params.prdid
+    const prodid= +req.params.prdid
+    console.log(prodid)
+    const obj2 = await productsCollection.findOne({productid:prodid})
     const obj = await productsCollection.findOneAndUpdate({productid:prodid},{$set:{display_status:false}},{returnOriginal:false})
     console.log(obj)
     if(obj){
@@ -41,7 +43,7 @@ adminApp.put('/disable/:prdid',async(req,res)=>{
 
 //Enable a disabled product
 adminApp.put('/enable/:prdid',async(req,res)=>{
-    const prodid= req.params.prdid
+    const prodid= +req.params.prdid
     const obj = await productsCollection.findOneAndUpdate({productid:prodid},{$set:{display_status:true}},{returnOriginal:false})
     console.log(obj)
     if(obj){

@@ -79,16 +79,16 @@ userApp.post('/login',async(req,res)=>{
 
 // Add a product to Cart
 userApp.put('/add-to-cart/:username/:productid/:qty',verifyToken, async(req,res)=>{
-    const prdid= req.params.productid;
-    const qty= +req.params.qty;
+    const prdid=(+req.params.productid);
+    const qty= (+req.params.qty);
     const uname = req.params.username
-    //console.log(uname,prdid," ",qty)
+    console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
-    //console.log(productobj)
+    console.log(productobj)
     const userobj = await cartCollection.findOne({username:uname}) ;
-    console.log(userobj)
+    //console.log(userobj)
    const prodIndex = userobj.cartItems.findIndex(product=>product.productid === prdid)
-    console.log(prodIndex)
+    //console.log(prodIndex)
     if(prodIndex==-1){
         console.log(1);
         productobj.quantity = qty;
@@ -110,7 +110,7 @@ userApp.put('/add-to-cart/:username/:productid/:qty',verifyToken, async(req,res)
 
 //increase a cart item quantity
 userApp.put('/increase-cart-count/:username/:productid', verifyToken,async(req,res)=>{
-    const prdid= req.params.productid;
+    const prdid= +req.params.productid;
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
@@ -133,7 +133,7 @@ userApp.put('/increase-cart-count/:username/:productid', verifyToken,async(req,r
 
 //decrease a cart item quantity
 userApp.put('/decrease-cart-count/:username/:productid',verifyToken, async(req,res)=>{
-    const prdid= req.params.productid;
+    const prdid= +req.params.productid;
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
@@ -160,20 +160,20 @@ userApp.put('/decrease-cart-count/:username/:productid',verifyToken, async(req,r
 
 //Remove product  from cart
 userApp.put('/remove-cart/:username/:productid', async(req,res)=>{
-    const prdid= req.params.productid;
+    const prdid= +req.params.productid;
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
     //console.log(productobj)
     const userobj = await cartCollection.findOne({username:uname}) ;
-    console.log(userobj)
+    //console.log(userobj)
    const prodIndex = userobj.cartItems.findIndex(product=>product.productid === prdid)
-    console.log(prodIndex)
+    //console.log(prodIndex)
     userobj.cartItems.splice(prodIndex,1);
 
     const updated = await cartCollection.findOneAndUpdate({username:uname},{$set:{cartItems:userobj.cartItems}},{returnOriginal:false})
     if(updated){
-        res.send({message:"product removed from cart"});
+        res.send({message:"product removed from cart",payload:userobj.cartItems});
     }
     else{
         res.send({message:"product not removed"})
@@ -194,7 +194,7 @@ userApp.get('/display-cart/:username',verifyToken,async(req,res)=>{
 
 // Add a product to wishlist
 userApp.put('/add-to-wishlist/:username/:productid', async(req,res)=>{
-    const prdid= req.params.productid;
+    const prdid= +req.params.productid;
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
@@ -218,15 +218,15 @@ userApp.put('/add-to-wishlist/:username/:productid', async(req,res)=>{
 
 //Remove product  from wishList
 userApp.put('/remove-wishlist/:username/:productid', async(req,res)=>{
-    const prdid= req.params.productid;
+    const prdid= +req.params.productid;
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
     //console.log(productobj)
     const userobj = await cartCollection.findOne({username:uname}) ;
-    console.log(userobj)
+    //console.log(userobj)
    const prodIndex = userobj.cartItems.findIndex(product=>product.productid === prdid)
-    console.log(prodIndex)
+    //console.log(prodIndex)
     userobj.wishList.splice(prodIndex,1);
 
     const updated = await cartCollection.findOneAndUpdate({username:uname},{$set:{wishList:userobj.wishList}},{returnOriginal:false})
@@ -256,11 +256,11 @@ userApp.put('/add-to-savelater/:username/:productid', async(req,res)=>{
     const uname = req.params.username
     //console.log(uname,prdid," ",qty)
     const productobj = await productsCollection.findOne({productid:prdid});
-    console.log(productobj)
+    //console.log(productobj)
     const userobj = await cartCollection.findOne({username:uname}) ;
-    console.log(userobj)
+    //console.log(userobj)
    const prodIndex = userobj.saveForLater.findIndex(product=>product.productid === prdid)
-    console.log(prodIndex)
+    //console.log(prodIndex)
     if(prodIndex==-1){
         userobj.saveForLater.push(productobj);
     }
@@ -282,9 +282,9 @@ userApp.put('/remove-savelater/:username/:productid', async(req,res)=>{
     const productobj = await productsCollection.findOne({productid:prdid});
     //console.log(productobj)
     const userobj = await cartCollection.findOne({username:uname}) ;
-    console.log(userobj)
+    //console.log(userobj)
    const prodIndex = userobj.cartItems.findIndex(product=>product.productid === prdid)
-    console.log(prodIndex)
+    //console.log(prodIndex)
     userobj.saveForLater.splice(prodIndex,1);
 
     const updated = await cartCollection.findOneAndUpdate({username:uname},{$set:{saveForLater:userobj.saveForLater}},{returnOriginal:false})
@@ -309,7 +309,7 @@ userApp.get('/display-savelater/:username',async(req,res)=>{
 
 //Display prodcts'
 userApp.get('/products',async(req,res)=>{
-    const obj = await productsCollection.find().toArray();
+    const obj = await productsCollection.find({display_status:true}).toArray();
     if(obj.length!=0){
         res.send({message:"Products are",payload:obj});
     }

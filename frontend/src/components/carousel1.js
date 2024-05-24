@@ -1,21 +1,33 @@
 import React from 'react';
-import {useState} from 'react';
-import Card from './card';
-export default function Carousel() {
- 
+
+export default function Carousel1() {
   return (
     <div>
       <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <div className="carousel-inner" id='carousel'>
-          
           <div className="carousel-item active">
-            <img src="https://source.unsplash.com/random/1200x400/?shirt" className="d-block w-100" alt="shirt" style={{ objectFit: "cover", height: "400px" }} />
+            <img
+              src="https://source.unsplash.com/random/1200x400/?shirt"
+              className="d-block w-100"
+              alt="shirt"
+              style={{ objectFit: "cover", height: "400px" }}
+            />
           </div>
           <div className="carousel-item">
-            <img src="https://source.unsplash.com/random/1000x400/?necklace" className="d-block w-100" alt="dress" style={{ objectFit: "cover", height: "400px" }} />
+            <img
+              src="https://source.unsplash.com/random/1000x400/?necklace"
+              className="d-block w-100"
+              alt="necklace"
+              style={{ objectFit: "cover", height: "400px" }}
+            />
           </div>
           <div className="carousel-item">
-            <img src="https://source.unsplash.com/random/1200x400/?shoes" className="d-block w-100" alt="shoes" style={{ objectFit: "cover", height: "400px" }} />
+            <img
+              src="https://source.unsplash.com/random/1200x400/?shoes"
+              className="d-block w-100"
+              alt="shoes"
+              style={{ objectFit: "cover", height: "400px" }}
+            />
           </div>
         </div>
         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">

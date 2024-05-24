@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../components/card";
-import Carousel from "../components/carousel";
-
+import Carousel1 from "../components/carousel1";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../port";
+import { useAccordionButton } from "react-bootstrap";
 export default function Home() {
-  const products = [
+  const location = useLocation()
+   const [products, setProducts]=useState([])
+   const [err,setErr]=useState("");
+  /*const products = [
     {
       productid: 1,
       title: "shoes",
@@ -56,11 +63,26 @@ export default function Home() {
       priceAfterDiscount: 2633,
       image: "https://cdn.shopify.com/s/files/1/0005/6973/7276/products/3_5f793b84-f47b-4d4b-b7e1-bf02c946fa7d.jpg?v=1676625334"
     }
-  ];
+  ];*/
+  const displayProducts=async()=>{
+    const res = await axios.get(`${BASE_URL}/user-api/products`)
+    console.log(res)
+    if(res.data.message=='Products are'){
+      setProducts(res.data.payload);
+    }
+    else{
+      setErr(res.data.message)
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    displayProducts();
+  },[location])
 
   return (
     <div>
-      <div><Carousel /></div>
+      <div><Carousel1 /></div>
       <div className="m-1">
         <Card products={products} />
       </div>

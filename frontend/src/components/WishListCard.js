@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { CiShare1 } from "react-icons/ci";
-import { BsCart3 } from "react-icons/bs";
-import { BiBookmarkPlus } from "react-icons/bi";
-import CardDetail from "./cardDetail";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-
+import { MdDeleteForever } from 'react-icons/md';
 import { useNavigate } from "react-router-dom";
-export default function Card({ products }) {
+import CardDetail from "./cardDetail";
+import { useSelector } from "react-redux";
+import { BASE_URL } from "../port";
+import axios from "axios";
+
+export default function WishListCard({ products, onItemRemove }) {
   const [checkedItems, setCheckedItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const { currentuser } = useSelector(state => state.userLogin);
+  const navigate = useNavigate();
 
   const handleCardpopup = (product) => {
     setSelectedProduct(product);
@@ -19,7 +21,7 @@ export default function Card({ products }) {
   const handleClosePopup = () => {
     setSelectedProduct(null);
   };
- const navigate=useNavigate()
+
   const Category = [
     { id: 1, value: "footwear" },
     { id: 2, value: "fashion" },
@@ -28,15 +30,30 @@ export default function Card({ products }) {
   ];
 
   const handleChange = (value) => {
-    // Check if the item is already checked
-    const isChecked = checkedItems.includes(value);
-
-    // If checked, remove it from the checkedItems array
-    if (isChecked) {
-      setCheckedItems(checkedItems.filter(item => item !== value));
+    if (checkedItems.includes(value)) {
+      setCheckedItems(prevState => prevState.filter(item => item !== value));
     } else {
-      // If not checked, add it to the checkedItems array
-      setCheckedItems([...checkedItems, value]);
+      setCheckedItems(prevState => [...prevState, value]);
+    }
+  };
+  
+
+  const token = sessionStorage.getItem('token');
+  const axiosWithToken = axios.create({
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const removeItem = async (product) => {
+    try {
+      const res = await axiosWithToken.put(`${BASE_URL}/user-api/remove-wishlist/${currentuser.username}/${product.productid}`);
+      console.log(res);
+      if (res.data.message === 'product removed from wishList') {
+        onItemRemove(); // Call the callback function to update the wishlist
+      } else {
+        console.log(res.data.message);
+      }
+    } catch (error) {
+      console.error('An error occurred while removing the item', error);
     }
   };
 
@@ -46,44 +63,27 @@ export default function Card({ products }) {
     return matchesCategory && matchesSearchQuery;
   });
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 1024 },
-      items: 4,
-    },
-    desktop: {
-      breakpoint: { max: 1024, min: 768 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 768, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
-
   return (
     <div className="d-flex justify-content-center carousel-inner">
-      <div className="col-md-3" style={{ width: "20%" ,marginLeft:'20px'}}>
+      <div className="col-md-3" style={{ width: "20%", marginLeft: '20px' }}>
         <h5>Sort By</h5>
-        {Category.map((cat) => (
-          <li className="d-flex mx-auto m-1" key={cat.id}>
-            <input
-              type="checkbox"
-              id={cat.id}
-              value={cat.value}
-              onChange={() => handleChange(cat.value)}
-              className="m-1 form-check-input"
-            />
-            <label htmlFor={cat.id}>{cat.value}</label>
-          </li>
-        ))}
+        <ul>
+          {Category.map((cat) => (
+            <li className="d-flex mx-auto m-1" key={cat.id}>
+              <input
+                type="checkbox"
+                id={cat.id}
+                value={cat.value}
+                onChange={() => handleChange(cat.value)}
+                className="m-1 form-check-input"
+              />
+              <label htmlFor={cat.id}>{cat.value}</label>
+            </li>
+          ))}
+        </ul>
       </div>
       <div style={{ width: "80%" }}>
-        <div className="">
+        <div>
           <form className="d-flex mt-2">
             <input
               className="form-control me-2"
@@ -93,12 +93,9 @@ export default function Card({ products }) {
               aria-label="Search"
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="btn btn-outline-success text-white bg-success" type="button">
-              Search
-            </button>
           </form>
         </div>
-        <Carousel responsive={responsive} infinite={true} className="d-flex justify-content-center flex-wrap" arrows>
+        <div className="d-flex justify-content-center flex-wrap">
           {filteredProducts.map((product) => (
             <div
               key={product.productid}
@@ -122,16 +119,19 @@ export default function Card({ products }) {
                   </p>
                 </div>
                 <div className="text-center d-flex justify-content-around">
-                  <BiBookmarkPlus className="" onClick={()=>{navigate('/cart')}} />
-                  <BsCart3 className="" onClick={()=>{navigate('/cart')}}/>
-                  <CiShare1 className="" onClick={() => handleCardpopup(product)} />
+                  <CiShare1 onClick={() => handleCardpopup(product)} />
+                  <MdDeleteForever
+                    className="text-danger"
+                    style={{ cursor: 'pointer', fontSize: '24px' }}
+                    onClick={() => removeItem(product)}
+                  />
                 </div>
               </div>
             </div>
           ))}
-        </Carousel>
+        </div>
       </div>
-      {selectedProduct && (<CardDetail show={selectedProduct} handleClose={handleClosePopup} />)}
+      {selectedProduct && <CardDetail show={selectedProduct} handleClose={handleClosePopup} />}
     </div>
   );
 }

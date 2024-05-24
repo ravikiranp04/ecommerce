@@ -1,74 +1,95 @@
-import React, { useState } from 'react';
-import { MdDeleteForever } from "react-icons/md";
+import React, { useState, useEffect } from 'react';
+import { MdDeleteForever } from 'react-icons/md';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { BASE_URL } from '../port';
 
 function Cart() {
-  const products = [
-    {
-      productid: 1,
-      title: "shoes",
-      description: "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-      price: 109.95,
-      discountPercentage: 5.6,
-      rating: 4.6,
-      stock: 25,
-      brand: "puma",
-      category: "fashion",
-      priceAfterDiscount: 2633,
-      image: "https://spy.com/wp-content/uploads/2022/08/120353_127_A_Adrenaline_GTS_22-e1661732377739.jpg"
-    },
-    {
-      productid: 2,
-      title: "shirt",
-      description: "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-      price: 109.95,
-      discountPercentage: 5.6,
-      rating: 4.6,
-      stock: 25,
-      brand: "puma",
-      category: "trend",
-      priceAfterDiscount: 2633,
-      image: "https://1.bp.blogspot.com/-YSAgWpOn1IA/U6FVuFCCGzI/AAAAAAAAA4g/ftSTdvtJS_Q/s1600/71KAJ6D8DyL._UL1500_.jpg"
-    },
-    {
-      productid: 3,
-      title: "t-shirt",
-      description: "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-      price: 109.95,
-      discountPercentage: 5.6,
-      rating: 4.6,
-      stock: 25,
-      brand: "puma",
-      category: "dashing",
-      priceAfterDiscount: 2633,
-      image: "https://i5.walmartimages.com/asr/284f89b0-afee-4e5c-a211-eeee44a6d8ef_1.2771c881383c14577c532acaddb7e036.jpeg"
-    },
-    {
-      productid: 4,
-      title: "shoes",
-      description: "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-      price: 109.95,
-      discountPercentage: 5.6,
-      rating: 4.6,
-      stock: 25,
-      brand: "puma",
-      category: "stylist",
-      priceAfterDiscount: 2633,
-      image: "https://cdn.shopify.com/s/files/1/0005/6973/7276/products/3_5f793b84-f47b-4d4b-b7e1-bf02c946fa7d.jpg?v=1676625334"
-    }
-  ];
+  const { currentuser } = useSelector((state) => state.userLogin);
+  const [subtotal, setSubTotal] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [err, setErr] = useState('');
+  const token = sessionStorage.getItem('token');
+  const axiosWithToken = axios.create({
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [quantities, setQuantities] = useState(Array(products.length).fill(1));
+  const displayCartItems = async () => {
+    const res = await axiosWithToken.get(`${BASE_URL}/user-api/display-cart/${currentuser.username}`);
+    if (res.data.message === 'Cart Items are') {
+      setProducts(res.data.payload);
+      navigate(`/user-profile/${currentuser.username}/cart`);
+    } else {
+      setErr(res.data.message);
+      console.log(err);
+    }
+  };
+
+  const calculateSubtotal = (quantities, products) => {
+    let sub = 0;
+    products.forEach((product, index) => {
+      sub += quantities[index] * product.priceAfterDiscount;
+    });
+    setSubTotal(sub);
+  };
+
+  const IncreaseCartCount = async (index, prodid) => {
+    const res = await axiosWithToken.put(`${BASE_URL}/user-api/increase-cart-count/${currentuser.username}/${prodid}`);
+    if (res.data.message === 'product quantity increased') {
+      handleQuantityChange(index, 1);
+    } else {
+      setErr(res.data.message);
+    }
+  };
+
+  const DecreaseCartCount = async (index, prodid) => {
+    const res = await axiosWithToken.put(`${BASE_URL}/user-api/decrease-cart-count/${currentuser.username}/${prodid}`);
+    if (res.data.message === 'product quantity Decreased') {
+      handleQuantityChange(index, -1);
+    } else {
+      setErr(res.data.message);
+    }
+  };
+
+  useEffect(() => {
+    displayCartItems();
+  }, []);
+
+  useEffect(() => {
+    const initialQuantities = products.map((product) => product.quantity || 1);
+    setQuantities(initialQuantities);
+    calculateSubtotal(initialQuantities, products);
+  }, [products]);
+
+  const removeItem = async (index, prodid) => {
+    const res = await axiosWithToken.put(`${BASE_URL}/user-api/remove-cart/${currentuser.username}/${prodid}`);
+    if (res.data.message === 'product removed from cart') {
+      const updatedProducts = products.filter((_, i) => i !== index);
+      setProducts(updatedProducts);
+      const updatedQuantities = quantities.filter((_, i) => i !== index);
+      setQuantities(updatedQuantities);
+      calculateSubtotal(updatedQuantities, updatedProducts);
+    } else {
+      setErr(res.data.message);
+    }
+  };
+
+  const [quantities, setQuantities] = useState([]);
 
   const handleQuantityChange = (index, delta) => {
     const newQuantities = [...quantities];
     newQuantities[index] = Math.max(0, newQuantities[index] + delta);
     setQuantities(newQuantities);
+    calculateSubtotal(newQuantities, products);
   };
 
   return (
     <div className="container p-2">
       <div className="d-flex justify-content-even">
-        <div className='w-50 pr-2'>
+        <div className="w-50 pr-2">
           <table className="table">
             <thead>
               <tr>
@@ -76,78 +97,94 @@ function Cart() {
                 <th>PRICE</th>
                 <th>QUANTITY</th>
                 <th>SUBTOTAL</th>
+                <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product, index) => (
                 <tr key={product.productid}>
                   <td className="d-flex align-items-center">
-                    <img src={product.image} alt={product.title} className="mr-3" style={{ width: "50px", height: "auto" }} />
+                    <img src={product.image} alt={product.title} className="mr-3" style={{ width: '50px', height: 'auto' }} />
                     <p>{product.title}</p>
                   </td>
                   <td>${product.priceAfterDiscount}</td>
                   <td>
                     <div className="d-flex align-items-center">
-                      {
-                        quantities[index] === 1 ? <MdDeleteForever /> :
+                      { quantities[index]==1?
+                          <MdDeleteForever
+                          className="text-danger"
+                          style={{ cursor: 'pointer', fontSize: '24px' }}
+                          onClick={() => removeItem(index, product.productid)}
+                        />:
                           <button
-                            className="btn btn-success"
-                            onClick={() => handleQuantityChange(index, -1)}
-                          >
-                            -
-                          </button>
+                          className="btn btn-success"
+                          onClick={() => DecreaseCartCount(index, product.productid)}
+                        >
+                          -
+                        </button>
+                        
+                        
                       }
-                      <p className="text-center mx-2" style={{ width: "40px" }}>{quantities[index]}</p>
+                      
+                      <p className="text-center mx-2" style={{ width: '40px' }}>{quantities[index]}</p>
                       <button
                         className="btn btn-success"
-                        onClick={() => handleQuantityChange(index, 1)}
+                        onClick={() => IncreaseCartCount(index, product.productid)}
                       >
                         +
                       </button>
                     </div>
                   </td>
                   <td>${product.priceAfterDiscount * quantities[index]}</td>
+                  <td>
+                    <MdDeleteForever
+                      className="text-danger"
+                      style={{ cursor: 'pointer', fontSize: '24px' }}
+                      onClick={() => removeItem(index, product.productid)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <hr />
-          <div className='d-flex'>
-            <textarea placeholder='Coupon Code' style={{ height: '30px' }} />
-            <h5 className='m-1' style={{ marginLeft: "10px" }}>APPLY COUPON</h5>
+          <div className="d-flex">
+            <input type="text" className="form-control" placeholder="Coupon Code" />
+            <button className="btn btn-primary ml-2">APPLY COUPON</button>
           </div>
           <hr />
         </div>
-        <div className="mt-4 p-3 " style={{width:"35%"}}>
-        <h3>Cart Total</h3>
-         <h5>Subtotal</h5>
-              <hr/>
-      <form>
-        <div className="form-group">
-          <label htmlFor="countrySelect">Country</label>
-          <select className="form-control" id="countrySelect">
-            <option>India</option>
-          </select>
-          <label htmlFor="stateSelect">Country</label>
-          <select className="form-control" id="stateSelect">
-            <option>Telangana</option>
-          </select>
-          <label htmlFor="citySelect">Country</label>
-          <select className="form-control" id="citySelect">
-            <option>City</option>
-          </select>
-          <label htmlFor="pinSelect">Country</label>
-          <select className="form-control" id="pinSelect">
-            <option>Pincode</option>
-          </select>
+        <div className="mt-4 p-3 bg-white shadow-sm" style={{ width: '35%' }}>
+          <h3>Cart Total</h3>
+          <div className="d-flex justify-content-between">
+            <h5>Subtotal</h5>
+            <h5>${subtotal}</h5>
+          </div>
+          <hr />
+          <form>
+            <div className="form-group">
+              <label htmlFor="countrySelect">Country</label>
+              <select className="form-control" id="countrySelect">
+                <option>India</option>
+              </select>
+              <label htmlFor="stateSelect">State</label>
+              <select className="form-control" id="stateSelect">
+                <option>Telangana</option>
+              </select>
+              <label htmlFor="citySelect">City</label>
+              <select className="form-control" id="citySelect">
+                <option>Hyderabad</option>
+              </select>
+              <label htmlFor="pinSelect">Pincode</label>
+              <input type="text" className="form-control" id="pinSelect" placeholder="Enter pincode" />
+            </div>
+          </form>
+          <hr />
+          <button className="btn btn-dark w-100" style={{ height: '50px' }}>PROCEED TO CHECKOUT &gt;</button>
         </div>
-      </form>
-      <hr/>
-      <button className="w-75 bg-dark text-light" style={{height:"50px"}}>PROCEED TO CHECKOUT =></button>
-    </div>
       </div>
     </div>
-  ); 
+  );
 }
 
 export default Cart;

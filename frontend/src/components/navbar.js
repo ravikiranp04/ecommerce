@@ -2,73 +2,97 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { resetState } from "../Redux/slices/userLoginSLice";
+import { useNavigate } from "react-router-dom";
+
 export default function Navigation() {
-  let dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { currentuser, loginStatus } = useSelector((state) => state.userLogin);
+  const navigate = useNavigate();
 
   function logout() {
-    //remove token from browser storage
     sessionStorage.removeItem("token");
-    //reset state
-    let actionobj = resetState();
-    dispatch(actionobj);
+    dispatch(resetState());
   }
+
   return (
-    <div
-      style={{ display: "flex", "justify-content": "space-around" }}
-      className="bg-dark"
-    >
-      <img
-        src="https://play-lh.googleusercontent.com/Z1gy3SDNLW4Nk3lz4yrvNoa4lA1if7NtlPgMJtntVLbONpu6GMM-Mv-5itive-nnzWM"
-        alt="Logo"
-        width="50"
-        height="50"
-        className="m-2"
-      />
-      <div className="text-info d-inline fs-4">
-        <em>Foodie</em>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container">
+        <Link className="navbar-brand" to="/">
+          <img
+            src="https://play-lh.googleusercontent.com/Z1gy3SDNLW4Nk3lz4yrvNoa4lA1if7NtlPgMJtntVLbONpu6GMM-Mv-5itive-nnzWM"
+            alt="Logo"
+            width="50"
+            height="50"
+            className="d-inline-block align-top"
+          />
+          <span className="text-info fs-4 ms-2"><em>Foodie</em></span>
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            {loginStatus === false ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="">
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="/about">
+                    About Us
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="/cart">
+                    My Cart
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="/login">
+                    Signin
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="/register">
+                    Signup
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <div className="d-flex align-items-center">
+                <li className="nav-item me-3">
+                  <button className="btn btn-success" onClick={() => { navigate(`/user-profile/${currentuser.username}/cart`) }}>
+                    My Cart
+                  </button>
+                </li>
+                <li className="nav-item me-3">
+                  <button className="btn btn-success" onClick={() => { navigate(`/user-profile/${currentuser.username}/wishlist`) }}>
+                    My Wishlist
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-info" to="" onClick={logout}>
+                    <span className="lead fs-3 text-warning m-2">
+                      {currentuser.username}
+                    </span>
+                    SignOut
+                  </Link>
+                </li>
+              </div>
+            )}
+          </ul>
+        </div>
       </div>
-      <ul className="nav justify-content-end ms-auto">
-        {loginStatus == false ? (
-          <>
-            <li className="nav-item">
-              <Link className="nav-link text-info" to="">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-info" to="/about">
-                About Us
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-info" to="/cart">
-                My Cart
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-info" to="/login">
-                Signin
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-info" to="/register">
-                Signup
-              </Link>
-            </li>
-          </>
-        ) : (
-          <li className="nav-item">
-            <Link className="nav-link text-info" to="" onClick={logout}>
-              <span className="lead fs-3 text-warning m-4">
-                {currentuser.username}
-                
-              </span>
-              SignOut
-            </Link>
-          </li>
-        )}
-      </ul>
-    </div>
+    </nav>
   );
 }

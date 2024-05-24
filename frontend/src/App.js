@@ -7,10 +7,13 @@ import Register from './screens/Register.js';
 import Login from './screens/Login.js';
 import RouteLayout from './screens/RouteLayout.js';
 import Cart from './components/cart.js';
-
+import OfflineCart from './components/OfflineCart.js';
 import AdminProfile from './adminComponents/AdminProfile.js';
 import UserProfile from './components/UserProfile.js';
-import AddProduct from './adminComponents/addProduct.js';
+import AddProduct from './adminComponents/AddProduct.js'
+import AdminCardDetail from './adminComponents/AdminCardDetail.js';
+import ModifyProduct from './adminComponents/ModifyProduct.js';
+import WishList from './components/WishList.js';
 function App() {
   let browserRouter = createBrowserRouter([
     {
@@ -33,24 +36,47 @@ function App() {
           path: '/login',
           element: <Login />,
         },
-        {
-          path:'/cart',
-          element:<Cart/>
-        },
+        
         {
            path:'/admin-profile',
            element:<AdminProfile/>,
-           children:[
-            {
-              path:'add-product',
-              element:<AddProduct/>
-            }
-           ] 
+           
         },
         {
-          path:'/user-profile',
-          element:<UserProfile/>
+          path:'/admin-profile/add-product',
+          element:<AddProduct/>
+        },
+        {
+          path:'/user-profile/:username',
+          element:<UserProfile/>,
+          
+        },
+        {
+          path:'/admin-profile/:productid',
+          element:<AdminCardDetail/>,
+          
+        },
+        {
+          path:'/admin-profile/:productid/modify-product',
+          element:<ModifyProduct/>
+        },
+        {
+          path:'/user-profile/:username/cart',
+          element:<Cart/>
+        },
+        {
+          path:'/cart',
+          element:<OfflineCart/>
+        },
+        {
+          path:'/wishlist',
+          element:<OfflineCart/>
+        },
+        {
+          path:'/user-profile/:username/wishlist',
+          element:<WishList/>
         }
+
       ],
     },
   ]);
