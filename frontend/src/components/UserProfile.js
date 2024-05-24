@@ -59,7 +59,7 @@ export default function UserProfile() {
       }
     };
     displayProducts();
-  }, [location]);
+  }, [location,err]);
 
   const handleChange = (value) => {
     // Check if the item is already checked

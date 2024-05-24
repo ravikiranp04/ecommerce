@@ -28,7 +28,7 @@ export default function Home() {
       }
     };
     displayProducts();
-  }, [location]);
+  }, [location,err]);
 
   return (
     <div>

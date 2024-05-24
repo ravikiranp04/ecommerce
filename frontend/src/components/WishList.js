@@ -33,7 +33,7 @@ function WishList() {
       }
     };
     displayCards();
-  }, [updateCounter]);
+  }, [updateCounter,currentuser.username,axiosWithToken]);
 
   const handleItemRemoval = () => {
     setUpdateCounter(prev => prev + 1);

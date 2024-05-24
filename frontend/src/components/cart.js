@@ -57,7 +57,7 @@ function Cart() {
       }
     };
     displayCartItems();
-  }, []);
+  }, [axiosWithToken,navigate,err,currentuser.username,]);
 
   useEffect(() => {
     const initialQuantities = products.map((product) => product.quantity || 1);
