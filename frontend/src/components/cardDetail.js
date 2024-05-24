@@ -38,7 +38,7 @@ const CardDetail = ({ show, handleClose }) => {
         <div className="container d-flex p-1">
           <div className="w-50 h-100 p-1 ">
             <div className="p-2">
-              <img src={show.image} alt={show.title} className="w-100 mb-3 h-75" />
+              <img src={show.images[0]} alt={show.title} className="w-100 mb-3 h-75" />
             </div>
             <div className="d-flex justify-content-around p-2">
               {show.images.map((img, index) => (

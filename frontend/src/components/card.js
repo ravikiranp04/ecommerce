@@ -105,7 +105,7 @@ export default function Card({ products }) {
               className="card-body border bg-light border-primary m-4 shadow"
               style={{ maxWidth: "250px", height: "450px" }}
             >
-              <img src={product.image} alt={product.title} className="w-100 mb-3 h-50" />
+              <img src={product.images[0]} alt={product.title} className="w-100 mb-3 h-50" />
               <div>
                 <div>
                   <p className="text-center mb-1">{product.category}</p>
