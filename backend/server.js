@@ -10,10 +10,10 @@ app.use('/user-api',userApp);
 app.use('/admin-api',adminApp);
 
 const corsOptions = {
-    origin: 'https://ecommerce1-bgef.onrender.com/',
+    origin: 'https://ecommerce1-bgef.onrender.com',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 204
   };
   
   // Use the CORS middleware with the options defined
@@ -25,7 +25,7 @@ app.use(exp.json());
 
 //
 //Replace react build in http web server
-app.use(exp.static(path.join(__dirname,'../frontend/build')))
+//app.use(exp.static(path.join(__dirname,'../frontend/build')))
 
 
 //Connecting Mongo DB server
