@@ -13,7 +13,7 @@ const corsOptions = {
     origin: 'https://ecommerce1-bgef.onrender.com',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 204
+    optionsSuccessStatus: 200
   };
   
   // Use the CORS middleware with the options defined
